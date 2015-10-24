@@ -27,7 +27,7 @@ func (w *Computation) Init(ctx *concord.Context) error {
 func (w *Computation) Metadata() *concord.Metadata {
 	return &concord.Metadata{
 		Name:    "word-source",
-		Outputs: []concord.Stream{concord.NewDefaultStream("words")},
+		Outputs: []string{"words"},
 	}
 }
 
