@@ -15,5 +15,5 @@ type Computation interface {
 // Metadata holds metadata for Computation service.
 type Metadata struct {
 	Name            string
-	Inputs, Outputs []string
+	Inputs, Outputs []Stream
 }
