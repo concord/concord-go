@@ -12,8 +12,10 @@ type Context struct {
 
 // NewContext returns new Context.
 func NewContext() *Context {
+	tx := bolt.NewComputationTx()
+	tx.Timers = make(map[string]int64)
 	return &Context{
-		tx: bolt.NewComputationTx(),
+		tx: tx,
 	}
 }
 
