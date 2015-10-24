@@ -21,9 +21,10 @@ func NewComputationService(comp Computation, proxy *Proxy) *ComputationService {
 }
 
 // Init implements ComputationService.
-func (*ComputationService) Init() (r *bolt.ComputationTx, err error) {
+func (c *ComputationService) Init() (*bolt.ComputationTx, error) {
 	ctx := NewContext()
-	return ctx.tx, nil
+	err := c.comp.Init(ctx)
+	return ctx.tx, err
 }
 
 // BoltProcessRecords implements ComputationService.
