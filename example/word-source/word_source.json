@@ -3,7 +3,7 @@
   "zookeeper_path": "/concord",
   "executable_arguments": [],
   "executable_name": "word-source",
-  "compress_files": ["word_source"],
+  "compress_files": ["word-source"],
   "computation_name": "word-source",
   "mem": 1024,
   "cpus": 1.0

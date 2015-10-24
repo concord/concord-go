@@ -27,7 +27,7 @@ func (w *Computation) Init(ctx *concord.Context) error {
 func (w *Computation) Metadata() *concord.Metadata {
 	return &concord.Metadata{
 		Name:    "word-source",
-		Outputs: []concord.Stream{concord.NewSuffleStream("words")},
+		Outputs: []string{"words"},
 	}
 }
 
@@ -47,8 +47,8 @@ func (w *Computation) ProcessRecords(ctx *concord.Context, r *concord.Record) er
 }
 
 func main() {
-	comp := &Computation{
+	w := &Computation{
 		words: []string{"foo", "bar", "baz", "fiz", "buzz"},
 	}
-	log.Fatal(concord.Serve(comp))
+	log.Fatal(concord.Serve(w))
 }
