@@ -6,7 +6,13 @@ import (
 )
 
 type Context struct {
-	*bolt.ComputationServiceClient
+	Tx *bolt.ComputationTx
+}
+
+func NewContext() *Context {
+	return &Context{
+		Tx: bolt.NewComputationTx(),
+	}
 }
 
 func (*Context) SetTimer(t time.Time, name string) {
