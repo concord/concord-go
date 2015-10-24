@@ -13,3 +13,17 @@ type Stream struct {
 	Name     string
 	Grouping bolt.StreamGrouping
 }
+
+func NewSuffleStream(name string) Stream {
+	return Stream{
+		Name:     name,
+		Grouping: StreamShuffle,
+	}
+}
+
+func NewGroupByStream(name string) Stream {
+	return Stream{
+		Name:     name,
+		Grouping: StreamGroupBy,
+	}
+}
