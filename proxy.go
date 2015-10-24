@@ -25,17 +25,18 @@ func NewProxy(hostport string, md *Metadata) (*Proxy, error) {
 	protocol := thrift.NewTBinaryProtocolFactoryDefault()
 	client := bolt.NewBoltProxyServiceClientFactory(transport, protocol)
 	proxy := &Proxy{client}
-	go func() {
-		err := transport.Open()
-		if err != nil {
-			log.Println("[ERROR] failed to open transport")
-			return
-		}
+	log.Println("[DEBUG] opening transport")
+	err = transport.Open()
+	log.Println("[DEBUG] opened transport")
+	if err != nil {
+		log.Println("[ERROR] failed to open transport")
+		return nil, err
+	}
 
-		if err := proxy.Register(hostport, md); err != nil {
-			log.Println("[ERROR] wrong hostport", err)
-		}
-	}()
+	if err := proxy.Register(hostport, md); err != nil {
+		log.Println("[ERROR] wrong hostport", err)
+		return nil, err
+	}
 	return proxy, nil
 }
 
