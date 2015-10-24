@@ -23,12 +23,12 @@ func Serve(comp Computation) error {
 
 	protocolF := thrift.NewTBinaryProtocolFactoryDefault()
 
-	proxy, err := NewProxy(proxyAddr)
+	proxy, err := NewProxy(proxyAddr, comp.Metadata())
 	if err != nil {
 		return err
 	}
+
 	service := NewComputationService(comp, proxy)
-	proxy.RegisterWithScheduler(comp.Metadata().ToBoltMetadata())
 
 	processor := bolt.NewComputationServiceProcessor(service)
 
