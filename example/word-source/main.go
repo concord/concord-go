@@ -42,13 +42,13 @@ func (w *Computation) ProcessTimer(ctx *concord.Context, t int64, timerName stri
 	return nil
 }
 
-func (w *Computation) ProcessRecords(ctx *concord.Context, d interface{}) error {
+func (w *Computation) ProcessRecords(ctx *concord.Context, r *concord.Record) error {
 	return errors.New("ProcessRecords is not implemented")
 }
 
 func main() {
-	w := &Computation{
+	comp := &Computation{
 		words: []string{"foo", "bar", "baz", "fiz", "buzz"},
 	}
-	log.Fatal(concord.Serve(w))
+	log.Fatal(concord.Serve(comp))
 }
