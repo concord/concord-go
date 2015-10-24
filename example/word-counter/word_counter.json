@@ -1,0 +1,10 @@
+{
+  "zookeeper_hosts": "localhost:2181",
+  "zookeeper_path": "/concord",
+  "executable_arguments": [],
+  "executable_name": "word-counter",
+  "compress_files": ["word-counter"],
+  "computation_name": "word-counter",
+  "mem": 1024,
+  "cpus": 1.0
+}
