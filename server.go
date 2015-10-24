@@ -9,10 +9,11 @@ import (
 
 // Serve starts service for the given Computation.
 func Serve(comp Computation) error {
-	bind := os.Getenv(bolt.KConcordEnvKeyClientListenAddr)
+	bindAddr := os.Getenv(bolt.KConcordEnvKeyClientListenAddr)
+	proxyAddr := os.Getenv(bolt.KConcordEnvKeyClientProxyAddr)
 
 	// Init transport
-	transport, err := thrift.NewTServerSocket(bind)
+	transport, err := thrift.NewTServerSocket(bindAddr)
 	if err != nil {
 		log.Println("[ERROR] failed to bind:", err)
 		return err
@@ -21,7 +22,12 @@ func Serve(comp Computation) error {
 	transportF := thrift.NewTFramedTransportFactory(factory)
 
 	protocolF := thrift.NewTBinaryProtocolFactoryDefault()
-	service := NewComputationService(comp)
+
+	proxy, err := NewProxy(proxyAddr)
+	if err != nil {
+		return err
+	}
+	service := NewComputationService(comp, proxy)
 	processor := bolt.NewComputationServiceProcessor(service)
 
 	srv := thrift.NewTSimpleServer4(processor, transport, transportF, protocolF)

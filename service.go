@@ -6,14 +6,16 @@ import (
 	"log"
 )
 
-// ComputationService implements thrift's ComputationService
+// ComputationService implements thrift's ComputationService && MutableEphemeralStateService
 type ComputationService struct {
-	comp Computation
+	comp  Computation
+	proxy *Proxy
 }
 
-func NewComputationService(comp Computation) *ComputationService {
+func NewComputationService(comp Computation, proxy *Proxy) *ComputationService {
 	return &ComputationService{
-		comp: comp,
+		comp:  comp,
+		proxy: proxy,
 	}
 }
 
@@ -48,4 +50,12 @@ func (c *ComputationService) BoltProcessTimer(key string, time int64) (r *bolt.C
 
 func (c *ComputationService) BoltMetadata() (r *bolt.ComputationMetadata, err error) {
 	return nil, nil
+}
+
+func (c *ComputationService) GetState(key string) ([]byte, error) {
+	return c.proxy.GetState(key)
+}
+
+func (c *ComputationService) SetState(key string, value []byte) error {
+	return c.proxy.SetState(key, value)
 }
