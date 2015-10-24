@@ -32,6 +32,7 @@ func (c *Context) ProduceRecord(stream, key, value string) {
 	record.Key = []byte(key)
 	record.Data = []byte(value)
 	record.UserStream = []byte(stream)
+	record.Meta = bolt.NewRecordMetadata()
 
 	c.tx.Records = append(c.tx.Records, record)
 }
