@@ -8,7 +8,7 @@ import (
 )
 
 // Serve starts service for the given Computation.
-func Serve(comp *Computation) error {
+func Serve(comp Computation) error {
 	bind := os.Getenv(bolt.KConcordEnvKeyClientListenAddr)
 
 	// Init transport
