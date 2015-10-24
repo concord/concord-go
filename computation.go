@@ -1,9 +1,5 @@
 package concord
 
-import (
-	_ "github.com/concord/concord-go/thrift"
-)
-
 // Computation defines Concord Computation.
 type Computation interface {
 	Init(*Context) error

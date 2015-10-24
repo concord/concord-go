@@ -7,10 +7,12 @@ import (
 	"log"
 )
 
+// Proxy represents client to Concord proxy.
 type Proxy struct {
 	*bolt.BoltProxyServiceClient
 }
 
+// NewProxy inits and connects to new Proxy.
 func NewProxy(hostport string) (*Proxy, error) {
 	socket, err := thrift.NewTSocket(hostport)
 	if err != nil {
