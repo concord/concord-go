@@ -26,7 +26,7 @@ func (c *ComputationService) BoltProcessRecords(records []*bolt.Record) (r []*bo
 	var txs []*bolt.ComputationTx
 	for _, record := range records {
 		ctx := NewContext()
-		err := c.comp.ProcessRecords(ctx, record)
+		err := c.comp.ProcessRecords(ctx, &Record{*record})
 		if err != nil {
 			log.Println("[ERROR] error processing record:", err)
 			return nil, errors.New("failed to process records")
