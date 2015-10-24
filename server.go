@@ -28,6 +28,8 @@ func Serve(comp Computation) error {
 		return err
 	}
 	service := NewComputationService(comp, proxy)
+	proxy.RegisterWithScheduler(comp.Metadata().ToBoltMetadata())
+
 	processor := bolt.NewComputationServiceProcessor(service)
 
 	srv := thrift.NewTSimpleServer4(processor, transport, transportF, protocolF)
