@@ -21,7 +21,7 @@ func Serve(comp *Computation) error {
 	transportF := thrift.NewTFramedTransportFactory(factory)
 
 	protocolF := thrift.NewTBinaryProtocolFactoryDefault()
-	service := &ComputationService{}
+	service := NewComputationService(comp, transportF.GetTransport(nil), protocolF)
 	processor := bolt.NewComputationServiceProcessor(service)
 
 	srv := thrift.NewTSimpleServer4(processor, transport, transportF, protocolF)
