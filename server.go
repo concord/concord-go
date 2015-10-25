@@ -8,6 +8,8 @@ import (
 )
 
 // Serve starts service for the given Computation.
+//
+// Must be called from main() function of worker.
 func Serve(comp Computation) error {
 	bindAddr := os.Getenv(bolt.KConcordEnvKeyClientListenAddr)
 	proxyAddr := os.Getenv(bolt.KConcordEnvKeyClientProxyAddr)
@@ -23,12 +25,12 @@ func Serve(comp Computation) error {
 
 	protocolF := thrift.NewTBinaryProtocolFactoryDefault()
 
-	proxy, err := NewProxy(proxyAddr, comp.Metadata())
+	proxy, err := newProxy(proxyAddr, comp.Metadata())
 	if err != nil {
 		return err
 	}
 
-	service := NewComputationService(comp, proxy)
+	service := newComputationService(comp, proxy)
 
 	processor := bolt.NewComputationServiceProcessor(service)
 

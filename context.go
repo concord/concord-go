@@ -19,7 +19,9 @@ func NewContext() *Context {
 	}
 }
 
-// SetTimer sets 'name' timer to time 't'.
+// SetTimer sets timer with name 'name' to time 't'.
+//
+// ProcessTimer for this timer will be fired at time 't'.
 func (c *Context) SetTimer(t time.Time, name string) {
 	t1 := t.UnixNano() / int64(time.Millisecond)
 	c.tx.Timers[name] = t1

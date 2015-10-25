@@ -9,13 +9,13 @@ import (
 	"strconv"
 )
 
-// Proxy represents client to Concord proxy.
-type Proxy struct {
+// proxy represents client to Concord proxy.
+type proxy struct {
 	*bolt.BoltProxyServiceClient
 }
 
-// NewProxy inits and connects to new Proxy.
-func NewProxy(hostport string, md *Metadata) (*Proxy, error) {
+// nePProxy inits and connects to new proxy.
+func newProxy(hostport string, md *Metadata) (*proxy, error) {
 	socket, err := thrift.NewTSocket(hostport)
 	if err != nil {
 		log.Println("[ERROR] Failed to create proxy socket:", err)
@@ -25,28 +25,28 @@ func NewProxy(hostport string, md *Metadata) (*Proxy, error) {
 	protocol := thrift.NewTBinaryProtocolFactoryDefault()
 	client := bolt.NewBoltProxyServiceClientFactory(transport, protocol)
 
-	proxy := &Proxy{client}
+	pr := &proxy{client}
 	err = transport.Open()
 	if err != nil {
 		log.Println("[ERROR] failed to open transport")
 		return nil, err
 	}
 
-	if err := proxy.Register(hostport, md); err != nil {
+	if err := pr.register(hostport, md); err != nil {
 		log.Println("[ERROR] wrong hostport", err)
 		return nil, err
 	}
 
-	return proxy, nil
+	return pr, nil
 }
 
-// Register registers proxy instance with the scheduler, update endpoint info.
-func (p *Proxy) Register(hostport string, metadata *Metadata) error {
+// register registers proxy instance with the scheduler, update endpoint info.
+func (p *proxy) register(hostport string, metadata *Metadata) error {
 	host, port, err := net.SplitHostPort(hostport)
 	if err != nil {
 		return err
 	}
-	md := metadata.ToBoltMetadata()
+	md := metadata.toBoltMetadata()
 
 	endpoint := bolt.NewEndpoint()
 	endpoint.Ip = host

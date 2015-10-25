@@ -11,29 +11,29 @@ var (
 	ErrProcessTimer   = errors.New("failed to process timer")
 )
 
-// ComputationService implements thrift's ComputationService && MutableEphemeralStateService
-type ComputationService struct {
+// ComputationService is a high-level wrapper around Computation. It implements thrift's ComputationService && MutableEphemeralStateService
+type computationService struct {
 	comp  Computation
-	proxy *Proxy
+	proxy *proxy
 }
 
-// NewComputationService returns new CompurationService wrapper object.
-func NewComputationService(comp Computation, proxy *Proxy) *ComputationService {
-	return &ComputationService{
+// newComputationService returns new CompurationService wrapper object.
+func newComputationService(comp Computation, proxy *proxy) *computationService {
+	return &computationService{
 		comp:  comp,
 		proxy: proxy,
 	}
 }
 
 // Init implements ComputationService.
-func (c *ComputationService) Init() (*bolt.ComputationTx, error) {
+func (c *computationService) Init() (*bolt.ComputationTx, error) {
 	ctx := NewContext()
 	err := c.comp.Init(ctx)
 	return ctx.tx, err
 }
 
 // BoltProcessRecords implements ComputationService.
-func (c *ComputationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt.ComputationTx, error) {
+func (c *computationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt.ComputationTx, error) {
 	var txs []*bolt.ComputationTx
 	for _, record := range records {
 		ctx := NewContext()
@@ -48,7 +48,7 @@ func (c *ComputationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt
 }
 
 // BoltProcessTimer implements ComputationService.
-func (c *ComputationService) BoltProcessTimer(key string, time int64) (*bolt.ComputationTx, error) {
+func (c *computationService) BoltProcessTimer(key string, time int64) (*bolt.ComputationTx, error) {
 	ctx := NewContext()
 
 	if err := c.comp.ProcessTimer(ctx, time, key); err != nil {
@@ -59,16 +59,16 @@ func (c *ComputationService) BoltProcessTimer(key string, time int64) (*bolt.Com
 }
 
 // BoltMetadata implements ComputationService.
-func (c *ComputationService) BoltMetadata() (*bolt.ComputationMetadata, error) {
+func (c *computationService) BoltMetadata() (*bolt.ComputationMetadata, error) {
 	return nil, nil
 }
 
 // GetState implements MutableEphemeralStateService.
-func (c *ComputationService) GetState(key string) ([]byte, error) {
+func (c *computationService) GetState(key string) ([]byte, error) {
 	return c.proxy.GetState(key)
 }
 
 // SetState implements MutableEphemeralStateService.
-func (c *ComputationService) SetState(key string, value []byte) error {
+func (c *computationService) SetState(key string, value []byte) error {
 	return c.proxy.SetState(key, value)
 }

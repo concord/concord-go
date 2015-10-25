@@ -4,12 +4,7 @@ import (
 	bolt "github.com/concord/concord-go/thrift"
 )
 
+// Record represents single record.
 type Record struct {
 	bolt.Record
-}
-
-func NewRecord() *Record {
-	rec := bolt.NewRecord()
-	rec.Meta = bolt.NewRecordMetadata()
-	return &Record{*rec}
 }
