@@ -34,3 +34,17 @@ func TestMetadata(t *testing.T) {
 		t.Fatalf("Metadata convert failed. Want %v, but got %v", want, boltMd)
 	}
 }
+
+func BenchmarkMetadata(b *testing.B) {
+	md := &Metadata{
+		Name: "test",
+		Inputs: []*Stream{
+			NewGroupByStream("stream 1"),
+			NewDefaultStream("stream 2"),
+		},
+		Outputs: []string{"output 1", "output 2"},
+	}
+	for i := 0; i < b.N; i++ {
+		md.toBoltMetadata()
+	}
+}
