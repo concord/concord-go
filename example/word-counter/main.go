@@ -4,7 +4,10 @@ import (
 	"errors"
 	"github.com/concord/concord-go"
 	"log"
+	"os"
 )
+
+var logger = log.New(os.Stdout, "", log.LstdFlags)
 
 type Computation struct {
 	dict map[string]int
@@ -12,7 +15,7 @@ type Computation struct {
 }
 
 func (c *Computation) Init(ctx *concord.Context) error {
-	log.Println("Counter initialized")
+	logger.Println("Counter initialized")
 	return nil
 }
 
@@ -28,8 +31,8 @@ func (c *Computation) ProcessRecords(ctx *concord.Context, r *concord.Record) er
 	}
 	c.dict[k] += 1
 
-	if c.pidx%1024 == 0 {
-		log.Println(c.dict)
+	if c.pidx%100000 == 0 {
+		logger.Println(c.dict)
 	}
 
 	return nil
@@ -38,7 +41,7 @@ func (c *Computation) ProcessRecords(ctx *concord.Context, r *concord.Record) er
 func (c *Computation) Metadata() *concord.Metadata {
 	return &concord.Metadata{
 		Name:   "word-counter",
-		Inputs: []concord.Stream{concord.NewDefaultStream("words")},
+		Inputs: []concord.Stream{concord.NewGroupByStream("words")},
 	}
 }
 

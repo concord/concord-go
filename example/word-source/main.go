@@ -5,10 +5,13 @@ import (
 	"github.com/concord/concord-go"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
 const timerName = "main_loop"
+
+var logger = log.New(os.Stdout, "", log.LstdFlags)
 
 type Computation struct {
 	words []string
@@ -16,7 +19,7 @@ type Computation struct {
 
 // Initialize computation and set timer
 func (w *Computation) Init(ctx *concord.Context) error {
-	log.Println("Word producer started")
+	logger.Println("Word producer started")
 	rand.Seed(time.Now().UnixNano())
 	ctx.SetTimer(time.Now(), timerName)
 	return nil
@@ -32,13 +35,13 @@ func (w *Computation) Metadata() *concord.Metadata {
 }
 
 func (w *Computation) ProcessTimer(ctx *concord.Context, t int64, timerName string) error {
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 100000; i++ {
 		i := rand.Intn(len(w.words))
 		randWord := w.words[i]
 		ctx.ProduceRecord("words", randWord, "")
 	}
-	m := time.Duration(500) * time.Millisecond
-	ctx.SetTimer(time.Now().Add(m), timerName)
+	logger.Println(time.Now(), "generated random words")
+	ctx.SetTimer(time.Now(), timerName)
 	return nil
 }
 

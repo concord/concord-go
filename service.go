@@ -6,6 +6,11 @@ import (
 	"log"
 )
 
+var (
+	ErrProcessRecords = errors.New("failed to process records")
+	ErrProcessTimer   = errors.New("failed to process timer")
+)
+
 // ComputationService implements thrift's ComputationService && MutableEphemeralStateService
 type ComputationService struct {
 	comp  Computation
@@ -28,14 +33,14 @@ func (c *ComputationService) Init() (*bolt.ComputationTx, error) {
 }
 
 // BoltProcessRecords implements ComputationService.
-func (c *ComputationService) BoltProcessRecords(records []*bolt.Record) (r []*bolt.ComputationTx, err error) {
+func (c *ComputationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt.ComputationTx, error) {
 	var txs []*bolt.ComputationTx
 	for _, record := range records {
 		ctx := NewContext()
 		err := c.comp.ProcessRecords(ctx, &Record{*record})
 		if err != nil {
 			log.Println("[ERROR] error processing record:", err)
-			return nil, errors.New("failed to process records")
+			return nil, ErrProcessRecords
 		}
 		txs = append(txs, ctx.tx)
 	}
@@ -43,18 +48,18 @@ func (c *ComputationService) BoltProcessRecords(records []*bolt.Record) (r []*bo
 }
 
 // BoltProcessTimer implements ComputationService.
-func (c *ComputationService) BoltProcessTimer(key string, time int64) (r *bolt.ComputationTx, err error) {
+func (c *ComputationService) BoltProcessTimer(key string, time int64) (*bolt.ComputationTx, error) {
 	ctx := NewContext()
 
 	if err := c.comp.ProcessTimer(ctx, time, key); err != nil {
 		log.Println("[ERROR] error processing timer:", err)
-		return nil, errors.New("failed to process timer")
+		return nil, ErrProcessTimer
 	}
 	return ctx.tx, nil
 }
 
 // BoltMetadata implements ComputationService.
-func (c *ComputationService) BoltMetadata() (r *bolt.ComputationMetadata, err error) {
+func (c *ComputationService) BoltMetadata() (*bolt.ComputationMetadata, error) {
 	return nil, nil
 }
 
