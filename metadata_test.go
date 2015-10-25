@@ -10,7 +10,7 @@ func TestMetadata(t *testing.T) {
 	md := &Metadata{
 		Name: "test",
 		Inputs: []*Stream{
-			NewGroupByStream("stream 1"),
+			NewStream("stream 1", GroupBy),
 			NewDefaultStream("stream 2"),
 		},
 		Outputs: []string{"output 1", "output 2"},
@@ -39,7 +39,7 @@ func BenchmarkMetadata(b *testing.B) {
 	md := &Metadata{
 		Name: "test",
 		Inputs: []*Stream{
-			NewGroupByStream("stream 1"),
+			NewStream("stream 1", GroupBy),
 			NewDefaultStream("stream 2"),
 		},
 		Outputs: []string{"output 1", "output 2"},

@@ -20,7 +20,7 @@ func (m *Metadata) toBoltMetadata() *bolt.ComputationMetadata {
 	for _, input := range m.Inputs {
 		md := bolt.NewStreamMetadata()
 		md.Name = input.Name
-		md.Grouping = input.Grouping
+		md.Grouping = groupingMap[input.Grouping]
 		inputs = append(inputs, md)
 	}
 
