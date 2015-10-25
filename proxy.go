@@ -24,10 +24,9 @@ func NewProxy(hostport string, md *Metadata) (*Proxy, error) {
 	transport := thrift.NewTFramedTransport(socket)
 	protocol := thrift.NewTBinaryProtocolFactoryDefault()
 	client := bolt.NewBoltProxyServiceClientFactory(transport, protocol)
+
 	proxy := &Proxy{client}
-	log.Println("[DEBUG] opening transport")
 	err = transport.Open()
-	log.Println("[DEBUG] opened transport")
 	if err != nil {
 		log.Println("[ERROR] failed to open transport")
 		return nil, err
@@ -37,18 +36,25 @@ func NewProxy(hostport string, md *Metadata) (*Proxy, error) {
 		log.Println("[ERROR] wrong hostport", err)
 		return nil, err
 	}
+
 	return proxy, nil
 }
 
+// Register registers proxy instance with the scheduler, update endpoint info.
 func (p *Proxy) Register(hostport string, metadata *Metadata) error {
 	host, port, err := net.SplitHostPort(hostport)
 	if err != nil {
 		return err
 	}
 	md := metadata.ToBoltMetadata()
+
 	endpoint := bolt.NewEndpoint()
 	endpoint.Ip = host
-	portI, _ := strconv.ParseInt(port, 10, 0)
+	portI, err := strconv.ParseInt(port, 10, 0)
+	if err != nil {
+		log.Println("[ERROR] wrong port for proxy:", err)
+		return err
+	}
 	endpoint.Port = int16(portI)
 
 	md.ProxyEndpoint = endpoint
