@@ -6,6 +6,7 @@ import (
 	"log"
 )
 
+// Errors declarations.
 var (
 	ErrProcessRecords = errors.New("failed to process records")
 	ErrProcessTimer   = errors.New("failed to process timer")
