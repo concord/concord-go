@@ -41,7 +41,7 @@ func (c *Computation) ProcessRecords(ctx *concord.Context, r *concord.Record) er
 func (c *Computation) Metadata() *concord.Metadata {
 	return &concord.Metadata{
 		Name:   "word-counter",
-		Inputs: []concord.Stream{concord.NewGroupByStream("words")},
+		Inputs: []*concord.Stream{concord.NewGroupByStream("words")},
 	}
 }
 

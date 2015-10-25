@@ -9,7 +9,7 @@ import (
 // working on.
 type Metadata struct {
 	Name    string
-	Inputs  []Stream
+	Inputs  []*Stream
 	Outputs []string
 }
 

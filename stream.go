@@ -11,16 +11,16 @@ type Stream struct {
 }
 
 // NewDefaultStream creates stream with default grouping option.
-func NewDefaultStream(name string) Stream {
-	return Stream{
+func NewDefaultStream(name string) *Stream {
+	return &Stream{
 		Name:     name,
 		Grouping: bolt.StreamGrouping_SHUFFLE,
 	}
 }
 
 // NewGroupByStream creates stream with group by grouping option.
-func NewGroupByStream(name string) Stream {
-	return Stream{
+func NewGroupByStream(name string) *Stream {
+	return &Stream{
 		Name:     name,
 		Grouping: bolt.StreamGrouping_GROUP_BY,
 	}
