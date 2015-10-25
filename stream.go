@@ -1,7 +1,7 @@
 package concord
 
 import (
-	"github.com/concord/concord-go/thrift"
+	bolt "github.com/concord/concord-go/thrift"
 )
 
 // Stream implements stream info.
