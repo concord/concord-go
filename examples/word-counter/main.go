@@ -24,11 +24,8 @@ func (c *Computation) ProcessTimer(ctx *concord.Context, t int64, timerName stri
 }
 
 func (c *Computation) ProcessRecords(ctx *concord.Context, r *concord.Record) error {
-	c.pidx += 1
 	k := string(r.Key)
-	if _, ok := c.dict[k]; !ok {
-		c.dict[k] = 0
-	}
+	c.pidx += 1
 	c.dict[k] += 1
 
 	if c.pidx%100000 == 0 {
