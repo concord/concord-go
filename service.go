@@ -26,9 +26,16 @@ func newComputationService(comp Computation, proxy *proxy) *computationService {
 	}
 }
 
+// newContext creates new Context linked with current proxy.
+func (c *computationService) newContext() *Context {
+	ctx := NewContext()
+	ctx.proxy = c.proxy
+	return ctx
+}
+
 // Init implements ComputationService.
 func (c *computationService) Init() (*bolt.ComputationTx, error) {
-	ctx := NewContext()
+	ctx := c.newContext()
 	err := c.comp.Init(ctx)
 	return ctx.tx, err
 }
@@ -37,7 +44,7 @@ func (c *computationService) Init() (*bolt.ComputationTx, error) {
 func (c *computationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt.ComputationTx, error) {
 	var txs []*bolt.ComputationTx
 	for _, record := range records {
-		ctx := NewContext()
+		ctx := c.newContext()
 		err := c.comp.ProcessRecords(ctx, &Record{*record})
 		if err != nil {
 			log.Println("[ERROR] error processing record:", err)
@@ -50,7 +57,7 @@ func (c *computationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt
 
 // BoltProcessTimer implements ComputationService.
 func (c *computationService) BoltProcessTimer(key string, time int64) (*bolt.ComputationTx, error) {
-	ctx := NewContext()
+	ctx := c.newContext()
 
 	if err := c.comp.ProcessTimer(ctx, time, key); err != nil {
 		log.Println("[ERROR] error processing timer:", err)
@@ -62,14 +69,4 @@ func (c *computationService) BoltProcessTimer(key string, time int64) (*bolt.Com
 // BoltMetadata implements ComputationService.
 func (c *computationService) BoltMetadata() (*bolt.ComputationMetadata, error) {
 	return nil, nil
-}
-
-// GetState implements MutableEphemeralStateService.
-func (c *computationService) GetState(key string) ([]byte, error) {
-	return c.proxy.GetState(key)
-}
-
-// SetState implements MutableEphemeralStateService.
-func (c *computationService) SetState(key string, value []byte) error {
-	return c.proxy.SetState(key, value)
 }

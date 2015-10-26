@@ -1,13 +1,20 @@
 package concord
 
 import (
+	"errors"
 	bolt "github.com/concord/concord-go/thrift"
 	"time"
 )
 
+// Errors declarations
+var (
+	ErrInvalidProxy = errors.New("proxy is not linked with context")
+)
+
 // Context represents single Computation Context
 type Context struct {
-	tx *bolt.ComputationTx
+	tx    *bolt.ComputationTx
+	proxy *proxy
 }
 
 // NewContext returns new Context.
@@ -37,4 +44,20 @@ func (c *Context) ProduceRecord(stream, key, value string) {
 	record.Meta = bolt.NewRecordMetadata()
 
 	c.tx.Records = append(c.tx.Records, record)
+}
+
+// GetState returns computation state by key.
+func (c *Context) GetState(key string) ([]byte, error) {
+	if c.proxy == nil {
+		return nil, ErrInvalidProxy
+	}
+	return c.proxy.GetState(key)
+}
+
+// SetState sets computation state.
+func (c *Context) SetState(key string, value []byte) error {
+	if c.proxy == nil {
+		return ErrInvalidProxy
+	}
+	return c.proxy.SetState(key, value)
 }

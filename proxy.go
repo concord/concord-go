@@ -14,12 +14,17 @@ type proxy struct {
 	*bolt.BoltProxyServiceClient
 }
 
+// Errors declarations.
+var (
+	ErrProxy = errors.New("proxy socket error")
+)
+
 // nePProxy inits and connects to new proxy.
 func newProxy(hostport string, md *Metadata) (*proxy, error) {
 	socket, err := thrift.NewTSocket(hostport)
 	if err != nil {
 		log.Println("[ERROR] Failed to create proxy socket:", err)
-		return nil, errors.New("proxy socket error")
+		return nil, ErrProxy
 	}
 	transport := thrift.NewTFramedTransport(socket)
 	protocol := thrift.NewTBinaryProtocolFactoryDefault()
