@@ -1,7 +1,6 @@
 package concord
 
 import (
-	"errors"
 	"git.apache.org/thrift.git/lib/go/thrift"
 	bolt "github.com/concord/concord-go/thrift"
 	"log"
@@ -14,17 +13,12 @@ type proxy struct {
 	*bolt.BoltProxyServiceClient
 }
 
-// Errors declarations.
-var (
-	ErrProxy = errors.New("proxy socket error")
-)
-
-// nePProxy inits and connects to new proxy.
+// newProxy inits and connects to new proxy.
 func newProxy(hostport string, md *Metadata) (*proxy, error) {
 	socket, err := thrift.NewTSocket(hostport)
 	if err != nil {
 		log.Println("[ERROR] Failed to create proxy socket:", err)
-		return nil, ErrProxy
+		return nil, err
 	}
 	transport := thrift.NewTFramedTransport(socket)
 	protocol := thrift.NewTBinaryProtocolFactoryDefault()

@@ -3,7 +3,6 @@ package concord
 import (
 	"git.apache.org/thrift.git/lib/go/thrift"
 	bolt "github.com/concord/concord-go/thrift"
-	"log"
 	"os"
 )
 
@@ -17,8 +16,7 @@ func Serve(comp Computation) error {
 	// Init transport
 	transport, err := thrift.NewTServerSocket(bindAddr)
 	if err != nil {
-		log.Println("[ERROR] failed to bind:", err)
-		return err
+		panic("failed to create server")
 	}
 	factory := thrift.NewTTransportFactory()
 	transportF := thrift.NewTFramedTransportFactory(factory)
@@ -27,7 +25,7 @@ func Serve(comp Computation) error {
 
 	proxy, err := newProxy(proxyAddr, comp.Metadata())
 	if err != nil {
-		return err
+		panic("failed to initialize proxy")
 	}
 
 	service := newComputationService(comp, proxy)

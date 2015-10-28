@@ -48,16 +48,10 @@ func (c *Context) ProduceRecord(stream, key, value string) {
 
 // GetState returns computation state by key.
 func (c *Context) GetState(key string) ([]byte, error) {
-	if c.proxy == nil {
-		return nil, ErrInvalidProxy
-	}
 	return c.proxy.GetState(key)
 }
 
 // SetState sets computation state.
 func (c *Context) SetState(key string, value []byte) error {
-	if c.proxy == nil {
-		return ErrInvalidProxy
-	}
 	return c.proxy.SetState(key, value)
 }
