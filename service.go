@@ -28,9 +28,7 @@ func newComputationService(comp Computation, proxy *proxy) *computationService {
 
 // newContext creates new Context linked with current proxy.
 func (c *computationService) newContext() *Context {
-	ctx := NewContext()
-	ctx.proxy = c.proxy
-	return ctx
+	return NewContext(c.proxy)
 }
 
 // Init implements ComputationService.

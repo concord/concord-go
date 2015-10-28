@@ -1,14 +1,8 @@
 package concord
 
 import (
-	"errors"
 	bolt "github.com/concord/concord-go/thrift"
 	"time"
-)
-
-// Errors declarations
-var (
-	ErrInvalidProxy = errors.New("proxy is not linked with context")
 )
 
 // Context represents single Computation Context
@@ -18,11 +12,12 @@ type Context struct {
 }
 
 // NewContext returns new Context.
-func NewContext() *Context {
+func NewContext(p *proxy) *Context {
 	tx := bolt.NewComputationTx()
 	tx.Timers = make(map[string]int64)
 	return &Context{
-		tx: tx,
+		tx:    tx,
+		proxy: p,
 	}
 }
 

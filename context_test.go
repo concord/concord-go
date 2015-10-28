@@ -7,7 +7,7 @@ import (
 )
 
 func TestContext(t *testing.T) {
-	ctx := NewContext()
+	ctx := NewContext(&proxy{})
 	if ctx == nil {
 		t.Fatal("NewContext should return non-nil context")
 	}
@@ -53,7 +53,7 @@ func TestContext(t *testing.T) {
 }
 
 func BenchmarkContextSetTimer(b *testing.B) {
-	ctx := NewContext()
+	ctx := NewContext(&proxy{})
 	t1 := time.Now()
 	for i := 0; i < b.N; i++ {
 		ctx.SetTimer(t1, "test")
@@ -61,7 +61,7 @@ func BenchmarkContextSetTimer(b *testing.B) {
 }
 
 func BenchmarkContextProduceRecord(b *testing.B) {
-	ctx := NewContext()
+	ctx := NewContext(&proxy{})
 	for i := 0; i < b.N; i++ {
 		ctx.ProduceRecord("stream", "key", "value")
 	}
