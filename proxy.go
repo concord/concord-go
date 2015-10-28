@@ -49,7 +49,7 @@ func (p *proxy) register(hostport string, metadata *Metadata) error {
 
 	endpoint := bolt.NewEndpoint()
 	endpoint.Ip = host
-	portI, err := strconv.ParseInt(port, 10, 0)
+	portI, err := strconv.Atoi(port)
 	if err != nil {
 		log.Println("[ERROR] wrong port for proxy:", err)
 		return err
