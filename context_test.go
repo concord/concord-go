@@ -16,8 +16,8 @@ func TestContext(t *testing.T) {
 	}
 
 	t1 := time.Now()
-	ctx.SetTimer(t1, "test 1")
-	ctx.SetTimer(t1.Add(time.Second), "test 2")
+	ctx.SetTimer("test 1", t1)
+	ctx.SetTimer("test 2", t1.Add(time.Second))
 
 	if len(ctx.tx.Timers) != 2 {
 		t.Fatalf("Should be %d timers, but got %d", 2, len(ctx.tx.Timers))
@@ -56,7 +56,7 @@ func BenchmarkContextSetTimer(b *testing.B) {
 	ctx := NewContext(&proxy{})
 	t1 := time.Now()
 	for i := 0; i < b.N; i++ {
-		ctx.SetTimer(t1, "test")
+		ctx.SetTimer("test", t1)
 	}
 }
 

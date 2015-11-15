@@ -21,7 +21,7 @@ type Computation struct {
 func (w *Computation) Init(ctx *concord.Context) error {
 	logger.Println("Word producer started")
 	rand.Seed(time.Now().UnixNano())
-	ctx.SetTimer(time.Now(), timerName)
+	ctx.SetTimer(timerName, time.Now())
 	return nil
 }
 
@@ -41,7 +41,7 @@ func (w *Computation) ProcessTimer(ctx *concord.Context, t int64, timerName stri
 		ctx.ProduceRecord("words", randWord, "")
 	}
 	logger.Println(time.Now(), "generated random words")
-	ctx.SetTimer(time.Now(), timerName)
+	ctx.SetTimer(timerName, time.Now())
 	return nil
 }
 
