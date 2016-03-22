@@ -25,6 +25,12 @@ func (w *Computation) Init(ctx *concord.Context) error {
 	return nil
 }
 
+// Perform some cleanup
+func (w *Computation) Destroy() error {
+	logger.Println("Word Producer stopped")
+	return nil
+}
+
 // Metadata defines name of computation and names of
 // input/output stream
 func (w *Computation) Metadata() *concord.Metadata {

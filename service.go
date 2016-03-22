@@ -38,6 +38,16 @@ func (c *computationService) Init() (*bolt.ComputationTx, error) {
 	return ctx.tx, err
 }
 
+// Destroys implements ComputationService.
+func (c *computationService) Destroy() (error) {
+	err := c.comp.Destroy()
+	if err != nil {
+		log.Println("[ERROR] error in computation shutdown hook")
+	}
+	return nil
+}
+
+
 // BoltProcessRecords implements ComputationService.
 func (c *computationService) BoltProcessRecords(records []*bolt.Record) ([]*bolt.ComputationTx, error) {
 	var txs []*bolt.ComputationTx

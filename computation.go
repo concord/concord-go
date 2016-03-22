@@ -11,6 +11,7 @@
 //
 //    type Demo struct{}
 //    func (*Demo) Init(*concord.Context) error {return nil}
+//    func (*Demo) Destroy() error {return nil}
 //    func (*Demo) ProcessRecords(*concord.Context, *concord.Record) error {return nil}
 //    func (*Demo) ProcessTimer(*concord.Context, int64, string) error {return nil}
 //    func (*Demo) Metadata() *concord.Metadata {
@@ -31,6 +32,7 @@ package concord
 // User must implement this interface for it's own computation worker.
 type Computation interface {
 	Init(*Context) error
+	Destroy() error
 	ProcessRecords(*Context, *Record) error
 	ProcessTimer(*Context, int64, string) error
 	Metadata() *Metadata

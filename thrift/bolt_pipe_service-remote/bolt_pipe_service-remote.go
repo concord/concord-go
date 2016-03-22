@@ -20,10 +20,7 @@ func Usage() {
 	fmt.Fprintln(os.Stderr, "Usage of ", os.Args[0], " [-h host:port] [-u url] [-f[ramed]] function [arg1 [arg2...]]:")
 	flag.PrintDefaults()
 	fmt.Fprintln(os.Stderr, "\nFunctions:")
-	fmt.Fprintln(os.Stderr, "  void gauge(string name, i64 val)")
-	fmt.Fprintln(os.Stderr, "  void timer(string name, i64 duration)")
-	fmt.Fprintln(os.Stderr, "  void histogram(string name, i64 measure)")
-	fmt.Fprintln(os.Stderr, "  void sum(string name, i64 counter)")
+	fmt.Fprintln(os.Stderr, "  void dispatchRecords( records)")
 	fmt.Fprintln(os.Stderr)
 	os.Exit(0)
 }
@@ -111,75 +108,37 @@ func main() {
 		Usage()
 		os.Exit(1)
 	}
-	client := bolt.NewBoltMetricsServiceClientFactory(trans, protocolFactory)
+	client := bolt.NewBoltPipeServiceClientFactory(trans, protocolFactory)
 	if err := trans.Open(); err != nil {
 		fmt.Fprintln(os.Stderr, "Error opening socket to ", host, ":", port, " ", err)
 		os.Exit(1)
 	}
 
 	switch cmd {
-	case "gauge":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Gauge requires 2 args")
+	case "dispatchRecords":
+		if flag.NArg()-1 != 1 {
+			fmt.Fprintln(os.Stderr, "DispatchRecords requires 1 args")
 			flag.Usage()
 		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		argvalue1, err129 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err129 != nil {
+		arg84 := flag.Arg(1)
+		mbTrans85 := thrift.NewTMemoryBufferLen(len(arg84))
+		defer mbTrans85.Close()
+		_, err86 := mbTrans85.WriteString(arg84)
+		if err86 != nil {
 			Usage()
 			return
 		}
-		value1 := argvalue1
-		fmt.Print(client.Gauge(value0, value1))
-		fmt.Print("\n")
-		break
-	case "timer":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Timer requires 2 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		argvalue1, err131 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err131 != nil {
+		factory87 := thrift.NewTSimpleJSONProtocolFactory()
+		jsProt88 := factory87.GetProtocol(mbTrans85)
+		containerStruct0 := bolt.NewDispatchRecordsArgs()
+		err89 := containerStruct0.ReadField1(jsProt88)
+		if err89 != nil {
 			Usage()
 			return
 		}
-		value1 := argvalue1
-		fmt.Print(client.Timer(value0, value1))
-		fmt.Print("\n")
-		break
-	case "histogram":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Histogram requires 2 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
+		argvalue0 := containerStruct0.Records
 		value0 := argvalue0
-		argvalue1, err133 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err133 != nil {
-			Usage()
-			return
-		}
-		value1 := argvalue1
-		fmt.Print(client.Histogram(value0, value1))
-		fmt.Print("\n")
-		break
-	case "sum":
-		if flag.NArg()-1 != 2 {
-			fmt.Fprintln(os.Stderr, "Sum requires 2 args")
-			flag.Usage()
-		}
-		argvalue0 := flag.Arg(1)
-		value0 := argvalue0
-		argvalue1, err135 := (strconv.ParseInt(flag.Arg(2), 10, 64))
-		if err135 != nil {
-			Usage()
-			return
-		}
-		value1 := argvalue1
-		fmt.Print(client.Sum(value0, value1))
+		fmt.Print(client.DispatchRecords(value0))
 		fmt.Print("\n")
 		break
 	case "":
