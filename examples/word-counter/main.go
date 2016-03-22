@@ -19,6 +19,11 @@ func (c *Computation) Init(ctx *concord.Context) error {
 	return nil
 }
 
+func (c *Computation) Destroy() error {
+	logger.Println("Counter Destroyed")
+	return nil
+}
+
 func (c *Computation) ProcessTimer(ctx *concord.Context, t int64, timerName string) error {
 	return errors.New("Not implemented")
 }

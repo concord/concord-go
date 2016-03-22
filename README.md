@@ -19,6 +19,9 @@ type Computation interface {
     // Perform initialization of computation.
     Init(*Context) error
 
+	// Perform some cleanup.
+    Destroy() error
+
     // Process record from stream.
     ProcessRecords(*Context, *Record) error
 

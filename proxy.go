@@ -54,7 +54,7 @@ func (p *proxy) register(hostport string, metadata *Metadata) error {
 		log.Println("[ERROR] wrong port for proxy:", err)
 		return err
 	}
-	endpoint.Port = int16(portI)
+	endpoint.Port = int32(portI)
 
 	md.ProxyEndpoint = endpoint
 	return p.RegisterWithScheduler(md)
